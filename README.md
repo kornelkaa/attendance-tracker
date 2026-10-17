@@ -70,6 +70,19 @@ python app.py
 ./venv/bin/python app.py
 ```
 
+### 3. Futtatás Docker Compose-zal 🐳
+
+Ha van Dockered, egyetlen paranccsal elindíthatod konténerben (az adatbázis megmarad az `instance/` mappában):
+
+```bash
+docker compose up -d --build
+```
+
+Leállítás:
+```bash
+docker compose down
+```
+
 ### Megnyitás
 
 Böngészőben nyisd meg: **http://127.0.0.1:5000**

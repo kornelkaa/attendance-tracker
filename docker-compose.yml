@@ -1,0 +1,14 @@
+services:
+  attendance-tracker:
+    build: .
+    container_name: attendance-tracker
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      # Az SQLite adatbázis megőrzése a gépen a konténer újraindítása után is
+      - ./instance:/app/instance
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=YOUR_SECRET_KEY_HERE
+      - PORT=5000

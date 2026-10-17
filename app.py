@@ -517,9 +517,13 @@ def stats():
         'at_risk_courses': at_risk_courses
     })
 
+# Adatbázis inicializálása induláskor (Gunicorn és közvetlen futtatás esetén is)
+with app.app_context():
+    os.makedirs('instance', exist_ok=True)
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        # Létrehozzuk az instance könyvtárat, ha nem létezik
-        os.makedirs('instance', exist_ok=True)
-        db.create_all()
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    host = os.environ.get('HOST', '0.0.0.0')
+    app.run(host=host, port=port, debug=True)
+
