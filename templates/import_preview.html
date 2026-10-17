@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Naptár import előnézet - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ url_for('import_calendar') }}" class="btn btn-ghost" style="padding: 0.5rem;">
+            <span class="material-icons-outlined">arrow_back</span>
+        </a>
+        <div>
+            <h1>Importálandó kurzusok kiválasztása</h1>
+            <p class="text-muted text-sm">Jelöld be azokat a kurzusokat, amelyeket hozzá szeretnél adni a rendszerhez.</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('import_confirm') }}">
+        <div class="card mb-6">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <button type="button" id="btn-select-all" class="btn btn-secondary text-sm">Mind kijelölése</button>
+                    <button type="button" id="btn-deselect-all" class="btn btn-ghost text-sm">Kijelölés törlése</button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label for="default_max_absences" class="text-sm font-medium mb-0">Alapértelmezett max. hiányzás:</label>
+                    <input type="number" id="default_max_absences" name="default_max_absences" value="3" min="1" max="20" class="input" style="width: 80px; padding: 0.4rem 0.6rem;">
+                </div>
+            </div>
+
+            <div class="grid gap-3">
+                {% for event in events %}
+                <div class="card p-4 flex items-start gap-4" style="background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);">
+                    <div style="padding-top: 0.25rem;">
+                        <input type="checkbox" name="selected_events" value="{{ loop.index0 }}" checked id="event-{{ loop.index0 }}" style="width: 1.25rem; height: 1.25rem; cursor: pointer;">
+                    </div>
+                    <label for="event-{{ loop.index0 }}" style="flex: 1; cursor: pointer; margin-bottom: 0;">
+                        <div class="flex justify-between items-start gap-2 flex-wrap">
+                            <strong style="font-size: 1.1rem; color: var(--text-primary);">{{ event.name }}</strong>
+                            <span class="badge">{{ event.course_type }}</span>
+                        </div>
+                        
+                        <div class="flex gap-4 mt-2 text-sm text-muted flex-wrap">
+                            {% if event.day_of_week or event.start_time %}
+                            <div class="flex items-center gap-1">
+                                <span class="material-icons-outlined" style="font-size: 1rem;">schedule</span>
+                                <span>{{ event.day_of_week }} {{ event.start_time }}{% if event.end_time %} - {{ event.end_time }}{% endif %}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if event.room %}
+                            <div class="flex items-center gap-1">
+                                <span class="material-icons-outlined" style="font-size: 1rem;">room</span>
+                                <span>{{ event.room }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if event.teacher %}
+                            <div class="flex items-center gap-1">
+                                <span class="material-icons-outlined" style="font-size: 1rem;">person</span>
+                                <span>{{ event.teacher }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {% if event.notes %}
+                        <div class="mt-2 text-sm text-muted" style="max-height: 3.6em; overflow: hidden; text-overflow: ellipsis;">
+                            {{ event.notes }}
+                        </div>
+                        {% endif %}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-4">
+            <a href="{{ url_for('import_calendar') }}" class="btn btn-secondary">Mégse</a>
+            <button type="submit" class="btn btn-primary">
+                <span class="material-icons-outlined">check_circle</span> Kiválasztott kurzusok importálása
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const selectAllBtn = document.getElementById('btn-select-all');
+    const deselectAllBtn = document.getElementById('btn-deselect-all');
+    const checkboxes = document.querySelectorAll('input[name="selected_events"]');
+
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', () => {
+            checkboxes.forEach(cb => cb.checked = true);
+        });
+    }
+
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', () => {
+            checkboxes.forEach(cb => cb.checked = false);
+        });
+    }
+});
+</script>
+{% endblock %}

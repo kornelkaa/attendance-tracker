@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Beállítások - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <h1 class="mb-6">Beállítások</h1>
+
+    <div class="grid gap-6 max-w-3xl">
+        <div class="card">
+            <h3 class="mb-4 flex items-center gap-2">
+                <span class="material-icons-outlined">palette</span> Megjelenés
+            </h3>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <div class="form-group">
+                    <label class="flex items-center justify-between" style="cursor: pointer;">
+                        <span>Sötét téma</span>
+                        <div style="position: relative; display: inline-block; width: 50px; height: 24px;">
+                            <input type="checkbox" id="theme-toggle" name="theme" value="dark" {% if current_user.theme == 'dark' %}checked{% endif %} style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-secondary); transition: .4s; border-radius: 34px; border: 1px solid var(--border-color);">
+                                <span style="position: absolute; content: ''; height: 16px; width: 16px; left: 4px; bottom: 3px; background-color: var(--text-primary); transition: .4s; border-radius: 50%; transform: {% if current_user.theme == 'dark' %}translateX(26px){% else %}translateX(0){% endif %};"></span>
+                            </span>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="form-group mt-4">
+                    <label for="accent_color">Kiemelő szín (Gombok, ikonok)</label>
+                    <div class="flex gap-4 items-center">
+                        <input type="color" id="accent_color" name="accent_color" class="input color-picker" value="{{ current_user.accent_color if current_user.accent_color else '#4F46E5' }}">
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="semester">Aktuális félév</label>
+                    <input type="text" id="semester" name="semester" class="input" value="{{ current_user.semester if current_user.semester else '' }}" placeholder="pl. 2023/24 Ősz">
+                </div>
+
+                <button type="submit" name="action" value="appearance" class="btn btn-primary mt-2">Mentés</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 class="mb-4 flex items-center gap-2">
+                <span class="material-icons-outlined">person</span> Fiók
+            </h3>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <div class="form-group">
+                    <label for="current_password">Jelenlegi jelszó</label>
+                    <input type="password" id="current_password" name="current_password" class="input" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">Új jelszó</label>
+                    <input type="password" id="new_password" name="new_password" class="input" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Új jelszó megerősítése</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="input" required>
+                </div>
+                <button type="submit" name="action" value="password" class="btn btn-primary mt-2">Jelszó módosítása</button>
+            </form>
+        </div>
+
+        <div class="card" style="border-color: var(--danger);">
+            <h3 class="mb-4 flex items-center gap-2 text-danger">
+                <span class="material-icons-outlined">warning</span> Veszélyzóna
+            </h3>
+            <p class="text-muted mb-4">A fiók törlése végleges. Minden adatod, beleértve a rögzített kurzusokat és hiányzásokat, véglegesen törlődik.</p>
+            
+            <form class="needs-confirmation" method="POST" action="{{ url_for('delete_account') }}">
+                <button type="submit" class="btn btn-danger">Fiók törlése</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Regisztráció - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="auth-card card fade-in">
+    <div class="auth-header">
+        <h1 style="color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span class="material-icons-outlined" style="font-size: 2rem;">school</span> ÓraTracker 📚
+        </h1>
+        <p class="text-muted">Kövesd nyomon egyetemi hiányzásaidat</p>
+    </div>
+
+    <form id="register-form" method="POST" action="{{ url_for('register') }}">
+        <div class="form-group">
+            <label for="username">Felhasználónév</label>
+            <input type="text" id="username" name="username" class="input" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="input" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Jelszó</label>
+            <input type="password" id="password" name="password" class="input" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Jelszó megerősítése</label>
+            <input type="password" id="confirm_password" name="confirm_password" class="input" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-full mt-4">Regisztráció</button>
+    </form>
+
+    <div class="text-center mt-6">
+        <a href="{{ url_for('login') }}">Már van fiókod? Jelentkezz be!</a>
+    </div>
+</div>
+{% endblock %}

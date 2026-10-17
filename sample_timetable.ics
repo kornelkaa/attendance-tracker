@@ -1,0 +1,47 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ÓraTracker//University Timetable Sample//HU
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Egyetemi Órarend
+BEGIN:VEVENT
+UID:sample-course-1@oratracker.hu
+DTSTAMP:20261001T080000Z
+DTSTART:20261005T080000
+DTEND:20261005T093000
+SUMMARY:Algoritmusok és adatszerkezetek előadás
+LOCATION:IB028
+DESCRIPTION:Oktató: Dr. Kovács Péter\nKötelező tárgy a mérnökinformatikus szakon.
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-course-2@oratracker.hu
+DTSTAMP:20261001T080000Z
+DTSTART:20261005T100000
+DTEND:20261005T113000
+SUMMARY:Algoritmusok és adatszerkezetek gyakorlat
+LOCATION:IB025
+DESCRIPTION:Oktató: Nagy Anna\nKiscsoportos feladatmegoldás.
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-course-3@oratracker.hu
+DTSTAMP:20261001T080000Z
+DTSTART:20261006T120000
+DTEND:20261006T140000
+SUMMARY:Adatbázisok labor
+LOCATION:PC9 labor
+DESCRIPTION:Oktató: Szabó Bence\nSQL lekérdezések és normalizálás.
+STATUS:CONFIRMED
+END:VEVENT
+BEGIN:VEVENT
+UID:sample-course-4@oratracker.hu
+DTSTAMP:20261001T080000Z
+DTSTART:20261007T140000
+DTEND:20261007T153000
+SUMMARY:Webfejlesztés szeminárium
+LOCATION:QBF09
+DESCRIPTION:Oktató: Dr. Tóth Zoltán\nFrontend és backend technológiák.
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

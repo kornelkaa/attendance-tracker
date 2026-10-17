@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Bejelentkezés - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="auth-card card fade-in">
+    <div class="auth-header">
+        <h1 style="color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span class="material-icons-outlined" style="font-size: 2rem;">school</span> ÓraTracker 📚
+        </h1>
+        <p class="text-muted">Kövesd nyomon egyetemi hiányzásaidat</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+            <label for="username">Felhasználónév</label>
+            <input type="text" id="username" name="username" class="input" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Jelszó</label>
+            <input type="password" id="password" name="password" class="input" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-full mt-4">Bejelentkezés</button>
+    </form>
+
+    <div class="text-center mt-6">
+        <a href="{{ url_for('register') }}">Nincs még fiókod? Regisztrálj!</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }} - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-ghost" style="padding: 0.5rem;">
+            <span class="material-icons-outlined">arrow_back</span>
+        </a>
+        <div style="flex: 1;"></div>
+        <a href="{{ url_for('edit_course', id=course.id) }}" class="btn btn-secondary">
+            <span class="material-icons-outlined">edit</span> Szerkesztés
+        </a>
+        <form class="needs-confirmation" method="POST" action="{{ url_for('delete_course', id=course.id) }}" style="display: inline;">
+            <button type="submit" class="btn btn-danger">
+                <span class="material-icons-outlined">delete</span> Törlés
+            </button>
+        </form>
+    </div>
+
+    <div class="card mb-6" style="border-left: 6px solid {{ course.color }};">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h1 class="mb-2">{{ course.name }}</h1>
+                <p class="text-muted" style="font-size: 1.125rem;">{{ course.teacher }}</p>
+            </div>
+            <span class="badge" style="font-size: 1rem; padding: 0.5rem 1rem;">{{ course.course_type }}</span>
+        </div>
+        
+        <div class="flex gap-6 mt-4 flex-wrap">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-muted">schedule</span>
+                <span>{{ course.day_of_week }} {{ course.start_time }} - {{ course.end_time }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-muted">room</span>
+                <span>{{ course.room }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-muted">stars</span>
+                <span>{{ course.credits }} kredit</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="card md:col-span-1 text-center flex flex-col justify-center items-center">
+            <h3 class="mb-4">Hiányzások állapota</h3>
+            
+            {% set pct = (course.absences|length / course.max_absences * 100) if course.max_absences > 0 else 0 %}
+            {% set status_color = 'var(--success)' if pct < 50 else ('var(--warning)' if pct <= 80 else 'var(--danger)') %}
+            {% set status_text = 'Rendben' if pct < 50 else ('Figyelem!' if pct <= 80 else 'Kritikus!') %}
+            
+            <div style="font-size: 4rem; font-weight: 800; line-height: 1; color: {{ status_color }};">
+                {{ course.absences|length }}<span style="font-size: 2rem; color: var(--text-secondary);">/{{ course.max_absences }}</span>
+            </div>
+            
+            <div class="progress-container mt-6 mb-4" style="height: 12px;">
+                <div class="progress-bar" style="width: {{ pct }}%; background-color: {{ status_color }};"></div>
+            </div>
+            
+            <div style="font-weight: 600; color: {{ status_color }}; font-size: 1.25rem;">{{ status_text }}</div>
+        </div>
+
+        <div class="card md:col-span-2">
+            <h3 class="mb-4">Új hiányzás rögzítése</h3>
+            <form method="POST" action="{{ url_for('add_absence', id=course.id) }}" class="flex flex-col gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group mb-0">
+                        <label for="date">Dátum</label>
+                        <input type="date" id="date" name="date" class="input" value="{{ today }}" required>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="reason">Indoklás (opcionális)</label>
+                        <input type="text" id="reason" name="reason" class="input" placeholder="pl. Betegség">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">
+                    <span class="material-icons-outlined">add</span> Hiányzás hozzáadása
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card">
+            <h3 class="mb-4">Hiányzások története</h3>
+            {% if course.absences %}
+                <ul class="absence-list">
+                    {% for absence in course.absences %}
+                        <li class="absence-item">
+                            <div>
+                                <div style="font-weight: 600;">{{ absence.date }}</div>
+                                {% if absence.reason %}
+                                    <div class="text-muted text-sm">{{ absence.reason }}</div>
+                                {% endif %}
+                            </div>
+                            <form method="POST" action="{{ url_for('delete_absence', id=absence.id) }}">
+                                <button type="submit" class="btn btn-ghost text-danger" title="Törlés">
+                                    <span class="material-icons-outlined">delete_outline</span>
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="empty-state" style="padding: 2rem 1rem;">
+                    <span class="material-icons-outlined" style="font-size: 3rem;">event_available</span>
+                    <p>Még nincs rögzített hiányzás.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if course.notes %}
+        <div class="card">
+            <h3 class="mb-4">Megjegyzések</h3>
+            <div style="white-space: pre-line;">{{ course.notes }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Kurzus szerkesztése' if course else 'Új kurzus hozzáadása' }} - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-ghost" style="padding: 0.5rem;">
+            <span class="material-icons-outlined">arrow_back</span>
+        </a>
+        <h1>{{ 'Kurzus szerkesztése' if course else 'Új kurzus hozzáadása' }}</h1>
+    </div>
+
+    <form method="POST" action="{{ url_for('edit_course', id=course.id) if course else url_for('add_course') }}" class="grid gap-6">
+        <div class="card">
+            <h3 class="mb-4">Alapadatok</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="name">Kurzus neve</label>
+                    <input type="text" id="name" name="name" class="input" value="{{ course.name if course else '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacher">Oktató</label>
+                    <input type="text" id="teacher" name="teacher" class="input" value="{{ course.teacher if course else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="course_type">Típus</label>
+                    <select id="course_type" name="course_type" class="input">
+                        <option value="Előadás" {% if course and course.course_type == 'Előadás' %}selected{% endif %}>Előadás</option>
+                        <option value="Gyakorlat" {% if course and course.course_type == 'Gyakorlat' %}selected{% endif %}>Gyakorlat</option>
+                        <option value="Szeminárium" {% if course and course.course_type == 'Szeminárium' %}selected{% endif %}>Szeminárium</option>
+                        <option value="Labor" {% if course and course.course_type == 'Labor' %}selected{% endif %}>Labor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="credits">Kreditek</label>
+                    <input type="number" id="credits" name="credits" class="input" value="{{ course.credits if course else '0' }}" min="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="mb-4">Időpont</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="day_of_week">Nap</label>
+                    <select id="day_of_week" name="day_of_week" class="input">
+                        <option value="Hétfő" {% if course and course.day_of_week == 'Hétfő' %}selected{% endif %}>Hétfő</option>
+                        <option value="Kedd" {% if course and course.day_of_week == 'Kedd' %}selected{% endif %}>Kedd</option>
+                        <option value="Szerda" {% if course and course.day_of_week == 'Szerda' %}selected{% endif %}>Szerda</option>
+                        <option value="Csütörtök" {% if course and course.day_of_week == 'Csütörtök' %}selected{% endif %}>Csütörtök</option>
+                        <option value="Péntek" {% if course and course.day_of_week == 'Péntek' %}selected{% endif %}>Péntek</option>
+                        <option value="Szombat" {% if course and course.day_of_week == 'Szombat' %}selected{% endif %}>Szombat</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="room">Terem</label>
+                    <input type="text" id="room" name="room" class="input" value="{{ course.room if course else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="start_time">Kezdés</label>
+                    <input type="time" id="start_time" name="start_time" class="input" value="{{ course.start_time if course else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="end_time">Befejezés</label>
+                    <input type="time" id="end_time" name="end_time" class="input" value="{{ course.end_time if course else '' }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="mb-4">Hiányzás kezelés és Testreszabás</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="form-group">
+                    <label for="max_absences">Maximum hiányzások száma</label>
+                    <input type="number" id="max_absences" name="max_absences" class="input" value="{{ course.max_absences if course else '3' }}" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="color">Szín</label>
+                    <div class="flex gap-4 items-center">
+                        <input type="color" id="color" name="color" class="input color-picker" value="{{ course.color if course else '#4F46E5' }}">
+                        <div class="course-stripe color-preview" style="position: relative; width: 40px; height: 40px; border-radius: 8px; background-color: {{ course.color if course else '#4F46E5' }};"></div>
+                    </div>
+                </div>
+                <div class="form-group md:col-span-2" style="grid-column: 1 / -1;">
+                    <label for="notes">Megjegyzések</label>
+                    <textarea id="notes" name="notes" class="input">{{ course.notes if course else '' }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between gap-4 mt-4">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Mégse</a>
+            <button type="submit" class="btn btn-primary">Kurzus mentése</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

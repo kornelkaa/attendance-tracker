@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Naptár importálás - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="flex items-center gap-4 mb-6">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-ghost" style="padding: 0.5rem;">
+            <span class="material-icons-outlined">arrow_back</span>
+        </a>
+        <h1>Naptár importálás</h1>
+    </div>
+
+    <div class="grid gap-6 max-w-3xl">
+        <div class="card">
+            <div class="flex items-center gap-4 mb-4">
+                <span class="material-icons-outlined" style="font-size: 2.5rem; color: var(--accent);">calendar_month</span>
+                <div>
+                    <h3>ICS fájl importálása</h3>
+                    <p class="text-muted text-sm">Importáld az órarendedet közvetlenül a naptáradból</p>
+                </div>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('import_calendar') }}">
+                <div class="form-group">
+                    <label for="ics_file">Válaszd ki az .ics fájlt</label>
+                    <input type="file" id="ics_file" name="ics_file" class="input" accept=".ics" required
+                           style="padding: 0.5rem;">
+                </div>
+                <button type="submit" class="btn btn-primary w-full">
+                    <span class="material-icons-outlined">upload_file</span> Fájl feltöltése és előnézet
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 class="mb-4 flex items-center gap-2">
+                <span class="material-icons-outlined">help_outline</span> Hogyan szerezd meg az ICS fájlt?
+            </h3>
+            
+            <div class="grid gap-4">
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                    <div class="flex items-center gap-2 mb-2" style="font-weight: 600;">
+                        <span class="material-icons-outlined" style="color: #4285F4;">event</span> Google Calendar
+                    </div>
+                    <ol class="text-sm text-muted" style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <li>Nyisd meg a Google Calendar beállításait</li>
+                        <li>Válaszd ki az órarend naptárat</li>
+                        <li>Kattints az "Exportálás" gombra</li>
+                        <li>Töltsd le az .ics fájlt</li>
+                    </ol>
+                </div>
+
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                    <div class="flex items-center gap-2 mb-2" style="font-weight: 600;">
+                        <span class="material-icons-outlined" style="color: #0078D4;">calendar_today</span> Outlook / Office 365
+                    </div>
+                    <ol class="text-sm text-muted" style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <li>Fájl → Megnyitás és exportálás → Importálás/Exportálás</li>
+                        <li>Válaszd az "iCalendar (.ics) fájlba exportálás" opciót</li>
+                        <li>Válaszd ki a naptárat és mentsd el</li>
+                    </ol>
+                </div>
+
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                    <div class="flex items-center gap-2 mb-2" style="font-weight: 600;">
+                        <span class="material-icons-outlined" style="color: #FF6B35;">school</span> Neptun / Tanulmányi rendszer
+                    </div>
+                    <ol class="text-sm text-muted" style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <li>Lépj be a Neptunba → Órarend</li>
+                        <li>Keresd az "Exportálás" vagy "iCal" gombot</li>
+                        <li>Töltsd le az .ics fájlt</li>
+                    </ol>
+                </div>
+
+                <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                    <div class="flex items-center gap-2 mb-2" style="font-weight: 600;">
+                        <span class="material-icons-outlined" style="color: #333;">laptop_mac</span> Apple Calendar
+                    </div>
+                    <ol class="text-sm text-muted" style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                        <li>Fájl → Exportálás → Exportálás...</li>
+                        <li>Válaszd ki a naptárat</li>
+                        <li>Mentsd el .ics formátumban</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

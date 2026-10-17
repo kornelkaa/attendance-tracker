@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Áttekintés - ÓraTracker{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <h1 class="mb-6">Áttekintés</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card stagger-1">
+            <div class="stat-title">Kurzusok</div>
+            <div class="stat-value">{{ courses|length }}</div>
+        </div>
+        <div class="stat-card stagger-1">
+            <div class="stat-title">Összes hiányzás</div>
+            <div class="stat-value">{{ total_absences }}</div>
+        </div>
+        <div class="stat-card stagger-2">
+            <div class="stat-title text-danger">Veszélyben</div>
+            <div class="stat-value text-danger">{{ courses_in_danger }}</div>
+        </div>
+        <div class="stat-card stagger-2">
+            <div class="stat-title text-success">Rendben</div>
+            <div class="stat-value text-success">{{ courses_ok }}</div>
+        </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+        <h2>Kurzusaim</h2>
+        <div class="flex gap-2">
+            <a href="{{ url_for('import_calendar') }}" class="btn btn-secondary">
+                <span class="material-icons-outlined">calendar_month</span> Importálás
+            </a>
+            <a href="{{ url_for('add_course') }}" class="btn btn-primary">
+                <span class="material-icons-outlined">add</span> Új kurzus
+            </a>
+        </div>
+    </div>
+
+    {% if courses %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for course in courses %}
+        {% set pct = (course.absences|length / course.max_absences * 100) if course.max_absences > 0 else 0 %}
+        {% set status_color = 'var(--success)' if pct < 50 else ('var(--warning)' if pct <= 80 else 'var(--danger)') %}
+        
+        <div class="card course-card fade-in" style="animation-delay: {{ loop.index * 0.1 }}s;" onclick="window.location.href='{{ url_for('course_detail', id=course.id) }}'">
+            <div class="course-stripe" style="--course-color: {{ course.color }};"></div>
+            
+            <div class="course-card-header">
+                <div>
+                    <div class="course-title">{{ course.name }}</div>
+                    <div class="text-muted mt-2" style="font-size: 0.875rem;">{{ course.teacher }}</div>
+                </div>
+                <span class="badge">{{ course.course_type }}</span>
+            </div>
+            
+            <div class="course-info mt-2">
+                <span class="material-icons-outlined" style="font-size: 1rem;">schedule</span>
+                {{ course.day_of_week }} {{ course.start_time }} - {{ course.end_time }}
+            </div>
+            <div class="course-info">
+                <span class="material-icons-outlined" style="font-size: 1rem;">room</span>
+                {{ course.room }}
+            </div>
+            
+            <div class="mt-4">
+                <div class="flex justify-between mb-2" style="font-size: 0.875rem; font-weight: 500;">
+                    <span>Hiányzások:</span>
+                    <span>{{ course.absences|length }} / {{ course.max_absences }}</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: {{ pct }}%; background-color: {{ status_color }};"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary w-full mt-4 btn-quick-absence" data-course-id="{{ course.id }}" onclick="event.stopPropagation();">
+                <span class="material-icons-outlined">add</span> Hiányzás rögzítése
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card empty-state fade-in">
+        <span class="material-icons-outlined">school</span>
+        <h3>Még nincs kurzusod</h3>
+        <p>Adj hozzá egy kurzust, vagy importáld közvetlenül a naptáradból (.ics formátum)!</p>
+        <div class="flex gap-3 mt-4 flex-wrap justify-center">
+            <a href="{{ url_for('import_calendar') }}" class="btn btn-secondary">
+                <span class="material-icons-outlined">calendar_month</span> Naptár importálás (.ics)
+            </a>
+            <a href="{{ url_for('add_course') }}" class="btn btn-primary">
+                <span class="material-icons-outlined">add</span> Kurzus hozzáadása
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
