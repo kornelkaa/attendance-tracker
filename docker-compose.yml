@@ -8,7 +8,11 @@ services:
     volumes:
       # Az SQLite adatbázis megőrzése a gépen a konténer újraindítása után is
       - ./instance:/app/instance
+    env_file:
+      - path: .env
+        required: false
     environment:
-      - FLASK_ENV=production
-      - SECRET_KEY=YOUR_SECRET_KEY_HERE
-      - PORT=5000
+      - FLASK_ENV=${FLASK_ENV:-production}
+      - SECRET_KEY=${SECRET_KEY}
+      - PORT=${PORT:-5000}
+
